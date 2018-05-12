@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ElderTumbleDetection</string>
+    <string name="startlocation">开始定位</string>
+    <string name="stoplocation">停止定位</string>
+    <string name="startforeground">开始后台定位</string>
+    <string name="stopforeground">停止后台定位</string>
+</resources>
