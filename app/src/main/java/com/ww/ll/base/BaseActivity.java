@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -38,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     /**
      * 界面里FrameLayout布局ID
      */
-    private final int container = R.id.container;
+    private final int container = R.id.container_main;
 
     /**
      * context
@@ -166,7 +167,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             }
         }, cnt );
     }
-    public ArrayList<BaseFragment> getFragments() {
+    public  ArrayList<BaseFragment> getFragments() {
         return fragments;
     }
     /**
@@ -215,6 +216,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         fragments.add(fragment);
         setFragment();
     }
+
 
     public void backTopFragment() {
         if (fragments != null && fragments.size() > 1) {

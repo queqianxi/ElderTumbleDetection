@@ -1,7 +1,26 @@
 <resources>
-    <string name="app_name">ElderTumbleDetection</string>
+    <string name="app_name">老人摔倒检测</string>
     <string name="startlocation">开始定位</string>
     <string name="stoplocation">停止定位</string>
     <string name="startforeground">开始后台定位</string>
     <string name="stopforeground">停止后台定位</string>
+    <string name="menu_search">搜索</string>
+    <string name="menu_setting">设置</string>
+    <string name="menu_help">帮助</string>
+    <string name="menu_add">添加</string>
+    <string name="zhuye">主页</string>
+    <string name="map_and_location">地图与位置</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+    <string name="switch_button">跌倒检测开关</string>
+    <string name="home_text">宽老人心，养老人身，急老人想，感老人恩</string>
+    <string name="home_text_second">老人安，天下安</string>
+    <string name="about_text">功能介绍：  实时监控用户是否发生跌倒。如果用户发生跌倒，手机会发出警报求助，以便获得及时的救助。</string>
+
+    <string-array name="sex">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
 </resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/黑色"
+        android:text="@string/app_name" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="50dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/home_content"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#DAA520"/>
+    <Button
+        android:id="@+id/home_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="走失寻回"
+        android:textColor="@color/黑色"
+        android:textSize="18sp"
+        android:padding="5dp"
+        android:background="@color/home_back"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/home_back">
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/switch_button"
+            android:textColor="@color/黑色"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:layout_marginStart="80dp"
+            />
+        <com.suke.widget.SwitchButton
+            android:layout_marginStart="45dp"
+            android:id="@+id/switchButton"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/home_text"
+        android:textColor="@color/黑色"/>
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="@string/home_text_second"
+        android:textColor="@color/黑色"
+        android:layout_marginBottom="20dp"/>
+
+</LinearLayout>

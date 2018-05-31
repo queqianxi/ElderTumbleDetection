@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="toolbar_bg">#0176da</color>
+    <color name="深褐">#8B0000</color>
+    <color name="黑色">#000000</color>
+    <color name="home_back">#f7d280</color>
+    <color name="about_content">#f9cf72</color>
+    <color name="白色">#ffffff</color>
 </resources>
