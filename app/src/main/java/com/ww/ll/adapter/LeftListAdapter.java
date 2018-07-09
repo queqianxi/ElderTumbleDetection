@@ -17,7 +17,7 @@ import com.ww.ll.db.LeftList;
 import java.util.List;
 
 /**
- *
+ * 主活动左侧滑适配器
  * @author Ww
  * @date 2018/5/14
  */

@@ -16,6 +16,8 @@ import android.telephony.SmsManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -23,10 +25,22 @@ import com.baidu.location.LocationClientOption;
 import com.ww.ll.base.BaseActivity;
 import com.ww.ll.util.LogUtil;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
-/**
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+/**报警活动
  * @author Ww
  */
 public class WarningActivity extends BaseActivity {
@@ -42,15 +56,22 @@ public class WarningActivity extends BaseActivity {
     private MediaPlayer mediaPlayer;
 
     private LocationClient mClient;
-    private MyLocationListener myLocationListener = new MyLocationListener();
+//    private MyLocationListener myLocationListener = new MyLocationListener();
     String address;
+    private final String APIkey = "yC3nDz8qwN5jcYCu5ZeahhXk0gw=";
+    private final String Host = "http://api.heclouds.com/devices/" + 24483119 + "/datastreams/";
+    private String Lon;
+    private String Lat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_warnning);
         LogUtil.d(TAG,"onCreate executed");
-        startLocation();
+        getLatitude();
+        getLongitude();
+//        startLocation();
+        getCity(Lon,Lat);
         //sendSMS(address);
         showAlertDialog();
 
@@ -199,25 +220,119 @@ public class WarningActivity extends BaseActivity {
         stopAlarm();
         finish();
     }
-    private void startLocation(){
-        mClient = new LocationClient(WarningActivity.this);
-        LocationClientOption mOption = new LocationClientOption();
-        mOption.setScanSpan(3000);
-        mOption.setCoorType("bd09ll");
-        mOption.setIsNeedAddress(true);
-        mOption.setOpenGps(true);
-        mOption.setIsNeedLocationDescribe(true);
-        mClient.setLocOption(mOption);
-        mClient.registerLocationListener(myLocationListener);
-        mClient.start();
+//    private void startLocation(){
+//        mClient = new LocationClient(WarningActivity.this);
+//        LocationClientOption mOption = new LocationClientOption();
+//        mOption.setScanSpan(3000);
+//        mOption.setCoorType("bd09ll");
+//        mOption.setIsNeedAddress(true);
+//        mOption.setOpenGps(true);
+//        mOption.setIsNeedLocationDescribe(true);
+//        mClient.setLocOption(mOption);
+//        mClient.registerLocationListener(myLocationListener);
+//        mClient.start();
+//    }
+//    class  MyLocationListener extends BDAbstractLocationListener {
+//        @Override
+//        public void onReceiveLocation(BDLocation bdLocation) {
+//            StringBuffer sb = new StringBuffer(256);
+//            // 定位类型
+//            sb.append(bdLocation.getLocationDescribe());
+//            address = sb.toString();
+//        }
+//    }
+
+    /**
+     * 获取经度
+     */
+    private void getLongitude() {
+        sendOkHttpRequestGet(Host + "Longitude",APIkey, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    String result = response.body().string();
+                    Map<String,Object> map=( Map<String,Object>) JSON.parseObject(result).get("data");
+                    Object aaa = map.get("current_value");
+                    Lon = String.valueOf(aaa);
+                }
+            }
+        });
     }
-    class  MyLocationListener extends BDAbstractLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            StringBuffer sb = new StringBuffer(256);
-            // 定位类型
-            sb.append(bdLocation.getLocationDescribe());
-            address = sb.toString();
-        }
+
+    /**
+     * 获取纬度
+     */
+    private void getLatitude() {
+        sendOkHttpRequestGet(Host + "Latitude",APIkey, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    String result = response.body().string();
+                    Map<String,Object> map=( Map<String,Object>) JSON.parseObject(result).get("data");
+                    Object aaa = map.get("current_value");
+                    Lat = String.valueOf(aaa);
+
+                }
+            }
+        });
     }
+
+    /**
+     * 获取定位信息
+     * @param longitude
+     * @param latitude
+     */
+    public void getCity(String longitude,String latitude) {
+        sendOkHttpRequestGet2("http://api.map.baidu.com/geocoder?output=json&location="+latitude+",%20"+longitude+"","yC3nDz8qwN5jcYCu5ZeahhXk0gw=", new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    String result = response.body().string();
+                    Map<String,Object> map=( Map<String,Object>) JSON.parseObject(result).get("result");
+                    Object aaa = map.get("formatted_address");
+                    address = String.valueOf(aaa);
+
+                }
+            }
+        });
+    }
+
+    /**
+     * 网络请求方法
+     * @param url
+     * @param key
+     * @param callback
+     */
+    public  void sendOkHttpRequestGet2(String url, String key,okhttp3.Callback callback){
+        OkHttpClient client =new OkHttpClient.Builder()
+                .connectTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(100, TimeUnit.SECONDS)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .header("key", key)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    public  void sendOkHttpRequestGet(String url, String APIKey,okhttp3.Callback callback){
+        OkHttpClient client =new OkHttpClient.Builder()
+                .connectTimeout(300, TimeUnit.SECONDS)
+                .readTimeout(100, TimeUnit.SECONDS)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .header("api-key", APIKey)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
 }

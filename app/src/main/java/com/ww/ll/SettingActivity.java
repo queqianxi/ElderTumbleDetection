@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.Window;
 
 /**
- *
+ * 设置页面
  * @author Ww
  * @date 2018/5/21
  */
@@ -26,7 +26,7 @@ public class SettingActivity extends PreferenceActivity implements SharedPrefere
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+        addPreferencesFromResource(R.layout.preferences);
         ActionBar actionBar = getActionBar();
         if (actionBar != null){
             actionBar.hide();

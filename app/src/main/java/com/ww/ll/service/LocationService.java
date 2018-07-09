@@ -7,7 +7,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 
-/**
+/**定位服务
  * @author baidu
  */
 public class LocationService {

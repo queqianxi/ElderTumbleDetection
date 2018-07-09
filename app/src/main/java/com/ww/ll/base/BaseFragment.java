@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- *
+ * 基碎片类
  * @author Ww
  * @date 2018/5/10
  */

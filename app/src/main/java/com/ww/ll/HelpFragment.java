@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.baidu.mapapi.BMapManager.getContext;
 
-/**
+/**帮助碎片
  * Created by Ww on 2018/5/21.
  */
 public class HelpFragment extends BaseFragment{

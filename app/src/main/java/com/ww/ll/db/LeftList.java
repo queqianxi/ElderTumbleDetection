@@ -1,7 +1,7 @@
 package com.ww.ll.db;
 
 /**
- *
+ * 主活动左侧滑数据类
  * @author Ww
  * @date 2018/5/14
  */

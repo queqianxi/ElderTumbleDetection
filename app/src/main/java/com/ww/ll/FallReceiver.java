@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.ww.ll.util.LogUtil;
 
-/**
+/**广播接受器
  * @author Ww
  */
 public class FallReceiver extends BroadcastReceiver {
@@ -22,7 +22,4 @@ public class FallReceiver extends BroadcastReceiver {
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent1);
     }
-
-
-
 }

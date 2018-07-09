@@ -1,4 +1,4 @@
-package com.ww.ll.util;
+package com.ww.ll.base;
 
 import android.app.Activity;
 

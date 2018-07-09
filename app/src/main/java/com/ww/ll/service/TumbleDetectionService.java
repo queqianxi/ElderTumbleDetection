@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.alibaba.fastjson.JSON;
+import com.suke.widget.SwitchButton;
 import com.ww.ll.FallReceiver;
 import com.ww.ll.MainActivity;
 import com.ww.ll.R;
@@ -30,17 +31,19 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-/**
+/**摔倒检测服务
  * @author Ww
  */
 public class TumbleDetectionService extends Service {
     private final static String TAG = "TumbleDetectionService";
     private final String APIkey = "yC3nDz8qwN5jcYCu5ZeahhXk0gw=";
-    private  String deviceID;
     private final String Host = "http://api.heclouds.com/devices/" + 24483119 + "/datastreams/";
     private final int FELL = 0;
-    private String svm;
+    private Double svm = 0.0;
+    boolean highLow;
+    private Double height = 0.0;
     private FallReceiver receiver;
+    private boolean pushthread = false;
     public TumbleDetectionService() {
     }
 
@@ -62,32 +65,53 @@ public class TumbleDetectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogUtil.d(TAG,"onStartCommand executed启动了");
-        DetectThread detectThread = new DetectThread();
-        detectThread.start();
+//        DetectThread detectThread = new DetectThread();
+//        detectThread.start();
+        getPushThread();
         return super.onStartCommand(intent, flags, startId);
     }
 
-    /**
-     * 开一个线程用于检测跌倒
-     */
-    class DetectThread extends Thread{
-        @Override
-        public void run() {
-//            while (running) {
-//                if (fall.isFell()) {
-//                    Log.e(TAG, "跌倒了");
-//                    running = false;
-            getSvm();
-//                    Message msg = handler.obtainMessage();
-//                    msg.what = FELL;
-//                    handler.sendMessage(msg);
-//                    fall.setFell(false);
-//                    fall.cleanData();
-//                    stopSelf();
+    //循环请求的线程
+    public void getPushThread() {
+        pushthread = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (pushthread) {
+                    pushthread = false;
+                    Message msg = handler.obtainMessage();
+                    msg.what = FELL;
+                    handler.sendMessage(msg);
+                    stopSelf();
+//                  这里面判断数据食肉达到阈值
+//                    try {
+//                        if (svm <15) {
+//                            Thread.sleep(500);
+//                            getSvm();
+//                            getHighLow();
+//                            getHeight();
+//                        }else if (svm>15 && svm <20){
+//                            if (height < 1.5 && highLow){
+//                                Thread.sleep(500);
+//                                getSvm();
+//                                getHeight();
+//                                getHighLow();
+//                            }
+//                        }else {
+//                    达到的话，发送摔倒信息
+//                            pushthread = false;
+//                            Message msg = handler.obtainMessage();
+//                            msg.what = FELL;
+//                            handler.sendMessage(msg);
+//                            LogUtil.d(TAG, "svm=" + svm);
 //
-//                }
-//            }
-        }
+//                        }
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+                }
+            }
+        }).start();
     }
 
     /**
@@ -105,15 +129,56 @@ public class TumbleDetectionService extends Service {
                     Map<String,Object> map=( Map<String,Object>) JSON.parseObject(result).get("data");
                     Object aaa = map.get("current_value");
                     String bbb = String.valueOf(aaa);
-                    initValue(bbb);
+                    svm = Double.valueOf(bbb);
+                }
+            }
+        });
+    }
+    /**
+     * 获取高低电平值
+     */
+    private void getHighLow() {
+        sendOkHttpRequestGet(Host + "highLow",APIkey, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    String result = response.body().string();
+                    Map<String,Object> map=( Map<String,Object>) JSON.parseObject(result).get("data");
+                    Object aaa = map.get("current_value");
+                    int bbb = Integer.parseInt(String.valueOf(aaa));
+                    if (bbb == 0){
+                        highLow = true;
+                    }else {
+                        highLow = false;
+                    }
+                }
+            }
+        });
+    }
+    /**
+     * 获取高度差值
+     */
+    private void getHeight() {
+        sendOkHttpRequestGet(Host + "height",APIkey, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    String result = response.body().string();
+                    Map<String,Object> map=( Map<String,Object>) JSON.parseObject(result).get("data");
+                    Object aaa = map.get("current_value");
+                    String bbb = String.valueOf(aaa);
+                    height = Double.valueOf(bbb);
                 }
             }
         });
     }
 
-    private void initValue(String aaa) {
-        System.out.print(aaa);
-    }
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -125,7 +190,7 @@ public class TumbleDetectionService extends Service {
 //                    showAlertDialog();
                     Intent intent = new Intent("com.broadcast.FELL");
                     sendBroadcast(intent);
-
+                    LogUtil.d(TAG,"发出了广播");
                     break;
                 default:
                     break;

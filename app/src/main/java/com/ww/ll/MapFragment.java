@@ -32,7 +32,7 @@ import org.litepal.crud.DataSupport;
 import java.util.List;
 
 /**
- *
+ * 地图碎片，百度接口提供
  * @author Ww
  * @date 2018/5/14
  */

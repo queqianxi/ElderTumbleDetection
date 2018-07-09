@@ -31,7 +31,7 @@ import java.util.List;
 
 import static com.baidu.mapapi.BMapManager.getContext;
 
-/**
+/**主活动
  * @author Ww
  */
 public class MainActivity extends BaseActivity {
